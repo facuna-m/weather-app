@@ -2,7 +2,7 @@ import { useState } from 'react';
 import axios from 'axios';
 
 const API_KEY = '1b2b008bc7b5bff18547f6a26fd9d171';
-const API_URL = 'https://api.openweathermap.org/data/2.5/weather';
+const API_URL = import.meta.env.VITE_API_KEY;
 
 function App(){
   //Estado para el input
@@ -19,7 +19,7 @@ function App(){
     const temp = weather.main.temp;
     if (temp < 15) return 'bg-blue-600'; //Menor a 15, Azul
     if (temp >= 15 && temp <= 25) return 'bg-emerald-600'; // Entre 15 y 25, Verde
-    return 'bg-orange-600'; //Mayor a 25, Naranjo
+    return 'bg-orange-500'; //Mayor a 25, Naranjo
   };
 
   const fetchWeather = async (e) => {
