@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import axios from 'axios';
 
-const API_KEY = '1b2b008bc7b5bff18547f6a26fd9d171';
-const API_URL = import.meta.env.VITE_API_KEY;
+const API_KEY = import.meta.env.VITE_API_KEY;
+const API_URL = 'https://api.openweathermap.org/data/2.5/weather';
 
 function App(){
   //Estado para el input
@@ -66,20 +66,56 @@ function App(){
           <input
             type="text"
             placeholder="Ej: Santiago, Buenos Aires..."
-            className="w-full p-4 rounded-xl text-gray-900 outline-none focus:ring-4 focus:ring-yellow-400/50 placeholder:text-gray-500 font-medium"
+            className="w-full p-4 rounded-xl text-white-900 outline-none focus:ring-4 focus:ring-yellow-400/50 placeholder:text-gray-500 font-medium"
             value={city}
             onChange={(e) => setCity(e.target.value)}
           />
-          <buton
+          <button
             type="submit"
             className="bg-black/40 hover:bg-black/60 p-4 rounded-xl font-bold transition-all disabled:opacity-50"
             disabled={loading}
           >
             {loading ? '...' : '🔍'}
-          </buton>
+          </button>
         </form>
-      </div>
 
+        {/*Errores*/}
+        {error && (
+          <div className="bg-red-500/80 p-4 rounded-xl mb-6 text-center font-bold animate-pulse border border-red-400">
+            {error}
+          </div>
+        )}
+
+        {/*Tarjeta*/}
+        {weather && (
+          <div className="text-center animate-bounce-in">
+            <h2 className="text-3xl font-bold">{weather.name} {weather.sys.county}</h2>
+
+            <div className="flex justify-center items-center py-4">
+              <img
+                src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@4x.png`}
+                alt="icon"
+                className="w-32 h-32 drop-shadow-lg"
+              />
+              <p className="text-7xl font-extrabold ml-[-10px]">{Math.round(weather.main.temp)}°</p>
+            </div>
+
+            <p className="text-2xl capitalize mb-8 font-light italic">{weather.weather[0].description}</p>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-black/20 p-4 rounded-2xl backdrop-blur-sm">
+                <span className="text-sm text-gray-300 uppercase tracking-wider">Humedad</span>
+                <p className="text-2xl font-bold mt-1">{weather.main.humidity}%</p>
+              </div>
+              <div className="bg-black/20 p-4 rounded-2xl backdrop-blur-sm">
+                <span className="text-sm text-gray-300 uppercase tracking-wider">Viento</span>
+                <p className="text-2xl font-bold mt-1">{weather.wind.speed} m/s</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+      </div>
     </div>
   )
 }
