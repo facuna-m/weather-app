@@ -3,6 +3,7 @@ import axios from 'axios';
 
 const API_KEY = import.meta.env.VITE_API_KEY;
 const API_URL = 'https://api.openweathermap.org/data/2.5/weather';
+const FORECAST_URL = 'https://api.openweathermap.org/data/2.5/forecast';
 
 function App(){
   //Estado para el input
@@ -12,6 +13,8 @@ function App(){
   //Estados para control de interfaz
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  //Estado para la lista de días futuros (Forecast)
+  const [forecast, setForecast] = useState([]);
 
   const getBackground = () => {
     if (!weather) return 'bg-gray-900'; //Color por defecto (sin datos)
@@ -19,7 +22,7 @@ function App(){
     const temp = weather.main.temp;
     if (temp < 15) return 'bg-blue-600'; //Menor a 15, Azul
     if (temp >= 15 && temp <= 25) return 'bg-emerald-600'; // Entre 15 y 25, Verde
-    return 'bg-orange-500'; //Mayor a 25, Naranjo
+    return 'bg-orange-400'; //Mayor a 25, Naranjo
   };
 
   const fetchWeather = async (e) => {
@@ -31,9 +34,10 @@ function App(){
     setLoading(true);
     setError('');
     setWeather(null);
+    setForecast([]);
 
     try {
-      const response = await axios.get(API_URL, {
+      const currentRes = await axios.get(API_URL, {
         params: {
           q: city,
           appid: API_KEY,
@@ -42,11 +46,27 @@ function App(){
         }
       });
 
-      setWeather(response.data); //Guardar datos (Caso de exito)
+      setWeather(currentRes.data); //Guardar datos (Caso de exito)
+
+      const forecastRes = await axios.get(FORECAST_URL, {
+        params: {
+          q: city,
+          appid: API_KEY,
+          units: 'metric',
+          lang: 'es'
+        }
+      });
+      
+      const dailyData = forecastRes.data.list.filter(reading =>
+        reading.dt_txt.includes("12:00:00")
+      );
+
+      setForecast(dailyData);
+
 
     } catch (err) {
       // Manejo de errores
-      if (err.response && err.response.status === 404) {
+      if (err.currentRes && err.currentRes.status === 404) {
         setError('Ciudad no encontrada. Revisa el nombre.');
       } else {
         setError('Error de conexión o API KEY inválida.');
@@ -111,6 +131,40 @@ function App(){
                 <span className="text-sm text-gray-300 uppercase tracking-wider">Viento</span>
                 <p className="text-2xl font-bold mt-1">{weather.wind.speed} m/s</p>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/*Pronostico Extendido*/}
+        {forecast.length > 0 && (
+          <div className="mt-8 w-full max-w-md">
+            <h3 className="text-xl font-bold text-center mb-4 text-white-90">Próximos Días</h3>
+
+            <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
+              {forecast.map((day) => (
+                <div key={day.dt} className="bg-black/30 p-3 rounded-xl text-center backdrop-blur-sm border border-white/10 hover:bg-black/40 transition">
+
+                  {/*Fecha*/}
+                  <p className="text-sm font-bold text-yellow-300">
+                    {new Date(day.dt_txt).toLocaleDateString('es-ES', { weekday: 'short' })}
+                  </p>
+
+                  {/*Icono*/}
+                  <img
+                    src={`https://openweathermap.org/img/wn/${day.weather[0].icon}.png`}
+                    alt="icon"
+                    className="w-10 h-10 mx-auto"
+                  />
+
+                  {/*Temperatura*/}
+                  <p className="font-bold text-lg">{Math.round(day.main.temp)}°</p>
+
+                  {/*Descripción corta*/}
+                  <p className="text-xs text-gray-300 capitalize truncate">
+                    {day.weather[0].description}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
         )}
