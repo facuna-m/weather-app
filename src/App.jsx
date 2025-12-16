@@ -66,7 +66,7 @@ function App(){
 
     } catch (err) {
       // Manejo de errores
-      if (err.currentRes && err.currentRes.status === 404) {
+      if (err.response && err.response.status === 404) {
         setError('Ciudad no encontrada. Revisa el nombre.');
       } else {
         setError('Error de conexión o API KEY inválida.');
