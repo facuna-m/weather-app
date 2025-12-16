@@ -79,7 +79,7 @@ function App(){
   return (
     <div className={`min-h-screen flex flex-col items-center justify-center text-white transition-colors duration-700 ${getBackground()}`}>
 
-      <div className="bg-white/10 backdrop-blur-md p-8 rounded-2xl shadow-2xl w-full max-w-md border border-white/20">
+      <div className="bg-white/10 backdrop-blur-md p-8 rounded-2xl shadow-2xl w-full max-w-3xl border border-white/20">
         <h1 className="text-4xl font-bold text-center mb-8 drop-shadow-md">Weather App 🌤️</h1>
         {/* Formulario */}
         <form onSubmit={fetchWeather} className='flex gap-2 mb-6'>
@@ -137,10 +137,10 @@ function App(){
 
         {/*Pronostico Extendido*/}
         {forecast.length > 0 && (
-          <div className="mt-8 w-full max-w-md">
+          <div className="mt-8 text-center">
             <h3 className="text-xl font-bold text-center mb-4 text-white-90">Próximos Días</h3>
 
-            <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
+            <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-5 gap-4">
               {forecast.map((day) => (
                 <div key={day.dt} className="bg-black/30 p-3 rounded-xl text-center backdrop-blur-sm border border-white/10 hover:bg-black/40 transition">
 
