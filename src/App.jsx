@@ -80,13 +80,13 @@ function App(){
     <div className={`min-h-screen flex flex-col items-center justify-center text-white transition-colors duration-700 ${getBackground()}`}>
 
       <div className="bg-white/10 backdrop-blur-md p-8 rounded-2xl shadow-2xl w-full max-w-3xl border border-white/20">
-        <h1 className="text-4xl font-bold text-center mb-8 drop-shadow-md">Weather App 🌤️</h1>
+        <h1 className="text-5xl font-bold text-center mb-8 drop-shadow-md">Weather App 🌤️</h1>
         {/* Formulario */}
         <form onSubmit={fetchWeather} className='flex gap-2 mb-6'>
           <input
             type="text"
             placeholder="Ej: Santiago, Buenos Aires..."
-            className="w-full p-4 rounded-xl text-white-900 outline-none focus:ring-4 focus:ring-yellow-400/50 placeholder:text-gray-500 font-medium"
+            className="w-full p-4 rounded-xl text-white-900 outline-none ring-1 ring-white-400/50 focus:ring-4 focus:ring-yellow-400/50 placeholder:text-gray-500 font-medium transition-ring duration-500"
             value={city}
             onChange={(e) => setCity(e.target.value)}
           />
@@ -109,7 +109,7 @@ function App(){
         {/*Tarjeta*/}
         {weather && (
           <div className="text-center animate-bounce-in">
-            <h2 className="text-3xl font-bold">{weather.name} {weather.sys.county}</h2>
+            <h2 className="text-3xl font-bold">{weather.name} {weather.sys.country}</h2>
 
             <div className="flex justify-center items-center py-4">
               <img
